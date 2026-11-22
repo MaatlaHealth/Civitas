@@ -15,6 +15,8 @@ export const RATE_LIMITS = {
   report: { name: "report", limit: 6, windowSeconds: 600 },
   tracking: { name: "tracking", limit: 30, windowSeconds: 600 },
   login: { name: "login", limit: 8, windowSeconds: 600 },
+  geocode: { name: "geocode", limit: 120, windowSeconds: 600 },
+  openAccess: { name: "open-access", limit: 10, windowSeconds: 600 },
 } as const satisfies Record<string, RateLimitRule>;
 
 /** Probability of sweeping expired counters on any one request. */

@@ -51,7 +51,7 @@ Civitas addresses these with one structured intake, deterministic checks that ex
 
 **Citizens (no account)**
 
-- Report an incident: category, title, description, map location (click, drag, device location with permission, or typed coordinates), optional photograph and optional contact details. Anonymous reporting is supported.
+- Report an incident: category, title, description, location (address suggestions as you type, then click or drag the map marker; device location with permission; or typed coordinates), optional photograph and optional contact details. Anonymous reporting is supported.
 - Receive a random reference (`CIV-XXXXXXXX`) and a 20-character access code. Only a SHA-256 hash of the code is stored.
 - Track status, a timeline and public updates, and add further information.
 
@@ -152,6 +152,7 @@ Copy `.env.example` to `.env.local` and fill in what you need. Never commit real
 | `NEXT_PUBLIC_DEPLOYMENT_MODE` | No | Set to `evaluation` to show a banner stating the deployment is not connected to a municipality. |
 | `NEXT_PUBLIC_MAP_STYLE_URL`, `NEXT_PUBLIC_MAP_CENTER_LAT`, `NEXT_PUBLIC_MAP_CENTER_LNG`, `NEXT_PUBLIC_MAP_ZOOM` | No | Basemap style and initial view (defaults: OpenFreeMap Positron, Johannesburg). |
 | `CIVITAS_ORGANIZATION_NAME` | No | Name given to the organisation record created on first use. |
+| `CIVITAS_OPEN_ACCESS` | No | Set to `true` to replace password sign-in with name-only sign-in for judges. **Anyone can then open the staff workspaces and read everything submitted, including contact details and photographs.** Never enable it on a deployment holding real reports. |
 | `CIVITAS_ALLOW_EMBEDDED_DB` | No | Only for running `next start` locally without PostgreSQL. Never set on a serverless host. |
 
 Only variables prefixed `NEXT_PUBLIC_` reach the browser; none of them is secret.
@@ -206,13 +207,13 @@ Results recorded on 22 November 2026 (Windows 11, Node 24):
 | Production build | Passed, 25 routes |
 | Unit tests | 401 passed (14 files) |
 | Integration tests | 26 passed (2 files) |
-| End-to-end tests | 15 passed (Chromium) |
+| End-to-end tests | 17 passed (Chromium), plus 1 passed for name-only sign-in (`CIVITAS_E2E_OPEN_ACCESS=1 npx playwright test`) |
 | `npm audit` | 4 moderate findings, all in `drizzle-kit` (a development-only migration generator, via an old bundled esbuild). No findings in runtime dependencies. |
 
 What the tests do and do not show:
 
 - **Integration tests** run the real service layer and real SQL migrations against PGlite. Object storage is replaced by an in-memory store and the Gemini HTTP API by a stubbed `fetch`. They are **mocked** integration tests of the AI path: they prove request shaping, schema validation, retry and failure handling, not that the live Gemini service responds.
-- **End-to-end tests** drive a real browser through the whole journey (report, track, duplicate confirmation, priority, assignment, crew work, closure, citizen view), the planning simulator, role enforcement, map loading and a 360 px overflow check on every page. They run with no Gemini key, so they exercise the "AI not configured" path. The map test needs network access to the public tile service.
+- **End-to-end tests** drive a real browser through the whole journey (report, track, duplicate confirmation, priority, assignment, crew work, closure, citizen view), the planning simulator, role enforcement, map loading, address suggestions and a 360 px overflow check on every page. They run with no Gemini key, so they exercise the "AI not configured" path. The map and address tests need network access to the public tile and address search services.
 - **Not yet executed:** a live Gemini call, and any test against a deployed Netlify site with Netlify DB and Netlify Blobs. See [Limitations](#limitations).
 - Accessibility was checked through semantic queries in the end-to-end tests (roles, labels) and manual review only. No automated audit or assistive-technology testing has been done and no WCAG conformance is claimed.
 
@@ -222,7 +223,7 @@ The repository is ready for Netlify's built-in Next.js support (no static export
 
 1. **Create the site.** In Netlify choose *Add new site → Import an existing project* and select this repository. `netlify.toml` already sets the build command (`npm run build:netlify`), publish directory and Node version.
 2. **Provision the database.** Add **Netlify DB** to the site (Extensions → Neon / Netlify DB, or `npx netlify db init`). This sets `NETLIFY_DATABASE_URL`, which Civitas uses automatically. Any PostgreSQL works if you set `DATABASE_URL` instead.
-3. **Set environment variables** (Site configuration → Environment variables): `AUTH_SECRET` (required), `GEMINI_API_KEY` (optional), `NEXT_PUBLIC_DEPLOYMENT_MODE=evaluation` (recommended for the hackathon). Do not put secrets in `netlify.toml`.
+3. **Set environment variables** (Site configuration → Environment variables): `AUTH_SECRET` (required), `GEMINI_API_KEY` (optional), `NEXT_PUBLIC_DEPLOYMENT_MODE=evaluation` (recommended for the hackathon), and `CIVITAS_OPEN_ACCESS=true` only if you want judges to sign in with just a name (see the warning in the environment table). Redeploy after changing variables. Do not put secrets in `netlify.toml`.
 4. **Deploy.** The build runs `scripts/migrate.ts` first, which applies migrations to the configured database, then builds. If no database URL is present the migration step is skipped with a warning in the build log, and the site will report that the database is unavailable.
 5. **Create staff accounts** from your own machine against the production database:
    ```bash
@@ -251,7 +252,8 @@ Deployment has not been performed or tested from this repository yet; see [Limit
 - **Authorisation:** enforced in the service layer for every operation. Crew members can only see and act on their own crew's assignments.
 - **Citizen tracking:** random non-sequential references; access codes stored only as hashes and compared in constant time; unknown reference and wrong code return the same error.
 - **Uploads:** size limit, file-signature check, full re-encode to JPEG (drops EXIF, including GPS), private storage, served only through an authenticated route.
-- **Rate limiting:** database-backed fixed windows on report submission, tracking and sign-in; client addresses are hashed before storage.
+- **Open evaluation access:** when `CIVITAS_OPEN_ACCESS=true`, sign-in needs only a name and creates a labelled evaluation account. This deliberately removes the protection on staff data for a judging deployment; the site banner, sign-in page and report form say so. It is off by default.
+- **Rate limiting:** database-backed fixed windows on report submission, tracking, address suggestions and sign-in; client addresses are hashed before storage.
 - **Cross-origin:** no CORS headers are emitted; state-changing API routes reject mismatched origins; server actions use Next.js's built-in origin check.
 - **Concurrency:** incidents carry a version number and updates are refused if the record changed underneath the user; assignment changes are conditional on the current state; one live assignment per incident is enforced by a partial unique index.
 - **Errors and logs:** internal details are logged as structured JSON and never returned to users; report text, contact details and images are never logged.
@@ -355,6 +357,7 @@ AI was used in two distinct ways.
 - **Screening is proximity only**, against whatever assets coordinators have registered.
 - **Single organisation per deployment.** The schema carries organisation ids, but multi-tenancy is not implemented.
 - **No notifications.** Citizens and crews must open the application to see changes; there is no email or SMS.
+- **Address suggestions depend on a public service** (Photon) with no service guarantee, and cover only what OpenStreetMap contains. The marker position, not the suggested text, is what Civitas stores as the location.
 - **Staff account management is by script**; there is no in-app user administration or password reset.
 - **One photograph per report**, JPEG/PNG/WebP up to 4 MB after in-browser downscaling.
 - **No accessibility conformance, security certification or legal compliance is claimed.**
@@ -362,6 +365,8 @@ AI was used in two distinct ways.
 
 ## Third-party attribution
 
+- Address suggestions: [Photon](https://photon.komoot.io) by komoot, built on OpenStreetMap data. Requests are proxied through the Civitas server.
+- Photographs from [Unsplash](https://unsplash.com/license), used under the Unsplash License: city street by Ngcali Alexa Magopeni, cracked asphalt by Vladimir Litvinov, workers relaying a walkway by Denise Jans. Each is credited beside the image on the home page.
 - Map tiles and style: [OpenFreeMap](https://openfreemap.org), © [OpenMapTiles](https://www.openmaptiles.org/), data © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors.
 - [Next.js](https://nextjs.org), [React](https://react.dev), [Tailwind CSS](https://tailwindcss.com), [MapLibre GL JS](https://maplibre.org), [Recharts](https://recharts.org), [Lucide](https://lucide.dev), [Drizzle ORM](https://orm.drizzle.team), [PGlite](https://pglite.dev), [Auth.js](https://authjs.dev), [Zod](https://zod.dev), [sharp](https://sharp.pixelplumbing.com), [bcryptjs](https://github.com/dcodeIO/bcrypt.js), [Vitest](https://vitest.dev), [Playwright](https://playwright.dev). Each is used under its own open-source licence.
 - Typeface: [Inter](https://rsms.me/inter/) (SIL Open Font License).

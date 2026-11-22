@@ -19,3 +19,21 @@ test("the report map loads and a click places the location marker", async ({ pag
   expect(Math.abs(latitude - E2E_LOCATION.latitude)).toBeLessThan(1);
   await expect(map.locator(".maplibregl-marker")).toHaveCount(1);
 });
+
+test("typing an address shows suggestions, and choosing one moves the marker", async ({ page }) => {
+  await page.goto("/report");
+  const address = page.getByRole("combobox", { name: "Street address or place name" });
+  await address.fill("Commissioner Street Johannesburg");
+  const firstOption = page.getByRole("listbox", { name: "Address suggestions" }).getByRole("option").first();
+  await expect(firstOption).toBeVisible({ timeout: 20_000 });
+  await firstOption.click();
+  await expect(address).toHaveValue(/Commissioner Street/);
+  await expect(page.getByText(/^Selected location: -26\.\d+, 28\.\d+/)).toBeVisible();
+  await expect(page.getByLabel("Latitude")).toHaveValue(/^-26\./);
+});
+
+test("the password sign-in is used when open access is off", async ({ page }) => {
+  await page.goto("/login");
+  await expect(page.getByLabel("Password")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Continue as coordinator" })).toHaveCount(0);
+});

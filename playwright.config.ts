@@ -12,11 +12,14 @@ import { defineConfig, devices } from "@playwright/test";
 process.env.CIVITAS_E2E_PASSWORD ??= randomBytes(18).toString("base64url");
 process.env.CIVITAS_E2E_AUTH_SECRET ??= randomBytes(32).toString("base64url");
 
-const PORT = 3100;
+// `CIVITAS_E2E_OPEN_ACCESS=1 npx playwright test` runs only the name-only sign-in
+// test, against a server started with open access switched on.
+const OPEN_ACCESS = process.env.CIVITAS_E2E_OPEN_ACCESS === "1";
+const PORT = OPEN_ACCESS ? 3101 : 3100;
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  testMatch: "**/*.spec.ts",
+  testMatch: OPEN_ACCESS ? "**/open-access.open.ts" : "**/*.spec.ts",
   // The journey tests share one database and build on each other's records.
   fullyParallel: false,
   workers: 1,
@@ -44,6 +47,7 @@ export default defineConfig({
       DATABASE_URL: "",
       NETLIFY_DATABASE_URL: "",
       GEMINI_API_KEY: "",
+      CIVITAS_OPEN_ACCESS: OPEN_ACCESS ? "true" : "",
     },
   },
 });

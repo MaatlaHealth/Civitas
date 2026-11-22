@@ -4,7 +4,7 @@ const FOOTER_LINKS = [
   { href: "/how-it-works", label: "How Civitas works" },
   { href: "/transparency", label: "Transparency and limitations" },
   { href: "/privacy", label: "Privacy" },
-  { href: "/login", label: "Staff sign in" },
+  { href: "/login", label: "Sign in" },
 ];
 
 export function SiteFooter() {

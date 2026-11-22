@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Notice } from "@/components/ui/layout";
 import { CATEGORY_DEFINITIONS, INCIDENT_CATEGORIES, URGENT_HAZARD_ADVICE, isIncidentCategory } from "@/lib/domain/categories";
 import { REPORTED_DURATIONS, REPORTED_DURATION_LABELS } from "@/lib/domain/types";
+import { AddressSearch } from "./address-search";
 import { downscaleImage } from "./downscale-image";
 import { ReportConfirmation, type SubmissionReceipt } from "./report-confirmation";
 
@@ -39,13 +40,14 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   );
 }
 
-export function ReportForm() {
+export function ReportForm({ openAccess = false }: { openAccess?: boolean }) {
   const formId = useId();
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   // One key per form session makes an accidental double submission harmless.
   const [submissionKey] = useState(() => crypto.randomUUID());
   const [category, setCategory] = useState("");
   const [location, setLocation] = useState<PickedLocation | null>(null);
+  const [address, setAddress] = useState("");
   const [anonymous, setAnonymous] = useState(false);
   const [photograph, setPhotograph] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -213,17 +215,17 @@ export function ReportForm() {
 
       <fieldset className="space-y-4">
         <legend className="text-lg font-semibold text-navy-900">2. Where is it?</legend>
+        <AddressSearch
+          value={address}
+          onChange={setAddress}
+          onChoose={(choice) => setLocation({ latitude: choice.latitude, longitude: choice.longitude })}
+          near={location}
+        />
         <p className="text-sm text-ink-muted">
-          Click or tap the map to place the marker on the problem, then drag it to adjust. <span aria-hidden>*</span>
+          Then check the marker. Click or tap the map to place it on the problem, or drag it to adjust. <span aria-hidden>*</span>
         </p>
         <LocationPicker value={location} onChange={setLocation} errorId={describedBy("latitude")} />
         <FieldError id={`${field("latitude")}-error`} message={fieldErrors.latitude ?? fieldErrors.longitude} />
-        <div>
-          <label htmlFor={field("address")} className="label">
-            Street address or landmark (optional)
-          </label>
-          <input id={field("address")} name="address" className="input" maxLength={200} autoComplete="off" />
-        </div>
       </fieldset>
 
       <fieldset className="space-y-3">
@@ -251,6 +253,12 @@ export function ReportForm() {
 
       <fieldset className="space-y-4">
         <legend className="text-lg font-semibold text-navy-900">4. Your details (optional)</legend>
+        {openAccess ? (
+          <Notice tone="warning" title="Details entered here are not private on this site">
+            This evaluation site lets anyone sign in to the staff workspaces, where contact details and photographs are
+            shown. Report anonymously or use made-up details.
+          </Notice>
+        ) : null}
         <label className="flex items-start gap-2.5 text-sm">
           <input
             type="checkbox"

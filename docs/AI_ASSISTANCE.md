@@ -27,9 +27,13 @@ Working from that specification, the AI wrote essentially all of the code and do
 | Synthetic scenario | The nine training reports, three assets and six crews were invented by the AI and are labelled synthetic everywhere they appear. |
 | Documentation | README, this file and the Devpost draft. |
 
+## Changes requested by the developer after the first deployment
+
+After deploying and trying the site, the developer asked for: address suggestions while typing on the report form, name-only sign-in for judges, Unsplash photographs, and a rewrite of the home page in plainer language. The developer chose these changes and the AI implemented them. The developer was told that name-only sign-in exposes all submitted data; it is off unless the developer sets CIVITAS_OPEN_ACCESS=true on the deployment.
+
 ## Verification actually performed
 
-Run by the AI in the developer's environment and recorded in the README: type check, lint, production build, 401 unit tests, 26 integration tests, 15 Playwright end-to-end tests, `npm audit`, and visual review of screenshots captured from the running application.
+Run by the AI in the developer's environment and recorded in the README: type check, lint, production build, 401 unit tests, 26 integration tests, 18 Playwright end-to-end tests, `npm audit`, and visual review of screenshots captured from the running application.
 
 Not performed: any live Gemini API call; any deployment to Netlify; any test against Netlify DB or Netlify Blobs; accessibility testing with assistive technology; independent security review.
 

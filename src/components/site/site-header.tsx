@@ -28,7 +28,7 @@ export function SiteHeader() {
           </ul>
         </nav>
         <ButtonLink href="/login" variant="secondary" size="sm">
-          Staff sign in
+          Sign in
         </ButtonLink>
       </div>
     </header>

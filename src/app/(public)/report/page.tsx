@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ReportForm } from "@/components/report/report-form";
 import { Notice } from "@/components/ui/layout";
 import { URGENT_HAZARD_ADVICE } from "@/lib/domain/categories";
+import { openAccessEnabled } from "@/lib/services/open-access";
 
 export const metadata: Metadata = {
   title: "Report an incident",
@@ -20,7 +21,7 @@ export default function ReportPage() {
         {URGENT_HAZARD_ADVICE}
       </Notice>
       <div className="rounded-lg border border-line bg-white p-5 shadow-xs sm:p-8">
-        <ReportForm />
+        <ReportForm openAccess={openAccessEnabled()} />
       </div>
     </div>
   );

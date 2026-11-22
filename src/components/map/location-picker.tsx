@@ -52,7 +52,21 @@ export function LocationPicker({ value, onChange, errorId }: LocationPickerProps
     onChangeRef.current = onChange;
   }, [onChange]);
 
+  // True when the latest change came from the map itself, so the view should not jump.
+  const changedOnMap = useRef(false);
+
+  // Keep the typed fields in step when the location is set from outside (an address suggestion).
+  const [syncedValue, setSyncedValue] = useState(value);
+  if (value !== syncedValue) {
+    setSyncedValue(value);
+    if (value && (Number(latitudeText) !== value.latitude || Number(longitudeText) !== value.longitude)) {
+      setLatitudeText(String(value.latitude));
+      setLongitudeText(String(value.longitude));
+    }
+  }
+
   const choose = (latitude: number, longitude: number) => {
+    changedOnMap.current = true;
     const location = { latitude: roundCoordinate(latitude), longitude: roundCoordinate(longitude) };
     setLatitudeText(String(location.latitude));
     setLongitudeText(String(location.longitude));
@@ -92,9 +106,11 @@ export function LocationPicker({ value, onChange, errorId }: LocationPickerProps
     } else {
       markerRef.current.setLngLat([value.longitude, value.latitude]);
     }
-    if (!map.getBounds().contains([value.longitude, value.latitude])) {
+    // Typed coordinates and address suggestions move the view; clicks and drags on the map do not.
+    if (!changedOnMap.current || !map.getBounds().contains([value.longitude, value.latitude])) {
       map.easeTo({ center: [value.longitude, value.latitude], zoom: Math.max(map.getZoom(), MAP_CONFIG.detailZoom) });
     }
+    changedOnMap.current = false;
   }, [map, value]);
 
   const useDeviceLocation = () => {

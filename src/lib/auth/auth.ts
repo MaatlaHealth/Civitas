@@ -6,6 +6,7 @@ import { getDb } from "@/lib/db/client";
 import { users } from "@/lib/db/schema";
 import type { UserRole } from "@/lib/domain/types";
 import { AppError } from "@/lib/errors";
+import { createOpenAccessUser, openAccessEnabled, openAccessSchema } from "@/lib/services/open-access";
 import { clientAddress, enforceRateLimit, RATE_LIMITS } from "@/lib/services/rate-limit";
 import { loginSchema } from "@/lib/validation/schemas";
 
@@ -53,6 +54,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const passwordMatches = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH);
         if (!user || !user.active || !passwordMatches) return null;
         return { id: user.id, name: user.name, email: user.email, role: user.role };
+      },
+    }),
+    // Name-only sign-in for evaluation deployments. Refused unless explicitly enabled.
+    Credentials({
+      id: "open-access",
+      credentials: { name: {}, role: {}, crewId: {} },
+      async authorize(credentials, request) {
+        if (!openAccessEnabled()) return null;
+        const parsed = openAccessSchema.safeParse(credentials);
+        if (!parsed.success) return null;
+        try {
+          await enforceRateLimit(RATE_LIMITS.openAccess, clientAddress(request.headers));
+        } catch (error) {
+          if (error instanceof AppError && error.code === "rate_limited") throw new RateLimitedSignin();
+          throw error;
+        }
+        const { name, role, crewId } = parsed.data;
+        return createOpenAccessUser({ name, role, crewId: crewId || undefined });
       },
     }),
   ],

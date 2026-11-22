@@ -258,9 +258,19 @@ export default function PrivacyPage() {
           <section id="third-parties" aria-labelledby="third-parties-heading" className="scroll-mt-6">
             <div className="prose-civitas">
               <h2 id="third-parties-heading">Third parties</h2>
-              <p>Two outside services are involved when you use Civitas.</p>
+              <p>Three outside services are involved when you use Civitas.</p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
+              <div className="rounded-lg border border-line bg-white p-5">
+                <MapPin aria-hidden className="size-5 text-teal-700" />
+                <h3 className="mt-3 text-base font-semibold">Address suggestions: Photon</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-ink">
+                  When you type in the address box on the report form, the text you type and the rough map position are
+                  sent from the Civitas server to Photon, a public search service built on OpenStreetMap data, to fetch
+                  suggestions. Photon does not receive your IP address or anything else from your report. If you would
+                  rather not use it, place the marker on the map instead.
+                </p>
+              </div>
               <div className="rounded-lg border border-line bg-white p-5">
                 <MapPin aria-hidden className="size-5 text-teal-700" />
                 <h3 className="mt-3 text-base font-semibold">Map tiles: OpenFreeMap</h3>

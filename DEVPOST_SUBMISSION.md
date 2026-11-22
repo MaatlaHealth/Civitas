@@ -50,7 +50,7 @@ On the included **synthetic** training scenario (nine invented reports, six inve
 
 ## Key features
 
-- Account-free incident reporting with map picker, permission-based geolocation and typed-coordinate fallback.
+- Account-free incident reporting with address suggestions as you type, a map picker, permission-based geolocation and typed-coordinate fallback.
 - Secure photograph upload: signature check, re-encoding that strips metadata, private storage.
 - Citizen tracking with a random reference and hashed access code.
 - Geospatial duplicate detection (bounding-box prefilter, Haversine distance, composite score) with reversible coordinator review and no automatic merging.
@@ -81,7 +81,7 @@ Next.js 16, React 19, TypeScript, Tailwind CSS 4, MapLibre GL JS 6 (OpenFreeMap 
 
 ## How the project was built
 
-The developer wrote a detailed product and safety specification. The implementation was then produced with substantial AI assistance (see the disclosure below), in dependency order: domain model and engines, database and services, reporting and tracking, coordinator dashboard, crew workspace, planning simulator, then tests and documentation. The work was verified with a type check, lint, a production build, 401 unit tests, 26 integration tests against in-memory PostgreSQL and 15 browser end-to-end tests.
+The developer wrote a detailed product and safety specification. The implementation was then produced with substantial AI assistance (see the disclosure below), in dependency order: domain model and engines, database and services, reporting and tracking, coordinator dashboard, crew workspace, planning simulator, then tests and documentation. The work was verified with a type check, lint, a production build, 401 unit tests, 26 integration tests against in-memory PostgreSQL and 18 browser end-to-end tests.
 
 **[ADD MANUALLY]** Describe your own review, changes, testing and deployment work here.
 
@@ -117,7 +117,7 @@ The developer wrote a detailed product and safety specification. The implementat
 - **Source repository:** https://github.com/MaatlaHealth/Civitas
 - **Deployment:** **[ADD MANUALLY]** Netlify URL, once the site is deployed and you have tested it.
 - **Demo video:** **[ADD MANUALLY]**
-- **Evaluation accounts:** **[ADD MANUALLY]** If you provide judges with a coordinator and a crew account, create them with `--evaluation`, share the details privately through Devpost, and do not publish passwords in the repository.
+- **Judge access:** with `CIVITAS_OPEN_ACCESS=true` set on the deployment, judges choose "Sign in", enter any name and continue as coordinator or crew member. No passwords are needed. This makes everything submitted to the site readable by anyone, so the site tells visitors to use made-up details.
 
 ## Deployment status at the time of writing
 
@@ -133,4 +133,5 @@ The repository builds for production locally and contains Netlify configuration,
 
 - **Logo:** the Civitas logo (`Civitas City Map Logo.png`) was supplied by the project owner. **[ADD MANUALLY]** State when and how it was created (and with what tool) if the rules ask for it.
 - **Code:** the repository started empty; no pre-existing project code was reused. All dependencies are third-party open-source packages listed in `package.json` and attributed in the README.
+- **Photographs:** three stock photographs from Unsplash (Unsplash License), credited on the home page and in the README.
 - **Data:** no real municipal data is included. The training scenario is synthetic and labelled as such.

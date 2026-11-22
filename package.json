@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "description": "Civitas: from citizen reports to coordinated infrastructure response.",
-  "license": "MIT",
   "engines": {
     "node": ">=20.9"
   },

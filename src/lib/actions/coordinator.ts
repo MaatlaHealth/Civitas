@@ -17,6 +17,7 @@ import {
 } from "@/lib/services/assignments";
 import { createAsset, deleteAsset, setAssetVerified } from "@/lib/services/assets";
 import { createCrew, setCrewStatus, updateCrew } from "@/lib/services/crews";
+import { loadDemoData } from "@/lib/services/demo-data";
 import { reviewDuplicate } from "@/lib/services/duplicates";
 import {
   addInternalNote,
@@ -285,5 +286,17 @@ export async function deleteAssetAction(_state: ActionState, formData: FormData)
     await deleteAsset(await getActor(), id);
     refresh();
     return "Asset removed from the registry.";
+  });
+}
+
+export async function loadDemoDataAction(): Promise<ActionState> {
+  return runAction("loadDemoData", async () => {
+    const { reportsCreated, trackable } = await loadDemoData(await getActor());
+    refresh();
+    if (reportsCreated === 0) return "Demonstration data is already loaded.";
+    const tracking = trackable
+      ? ` To try the public tracking page, use reference ${trackable.reference} with access code ${trackable.accessCode} (shown once).`
+      : "";
+    return `Loaded ${reportsCreated} demonstration reports with demo crews and assets.${tracking}`;
   });
 }

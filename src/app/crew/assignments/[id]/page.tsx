@@ -102,12 +102,12 @@ export default async function CrewAssignmentPage({ params }: { params: Promise<{
                 <>
                   <ActionForm action={respondAction}>
                     <input type="hidden" name="id" value={assignment.id} />
-                    <input type="hidden" name="response" value="accepted" />
+                    <input type="hidden" name="decision" value="accepted" />
                     <SubmitButton>Accept assignment</SubmitButton>
                   </ActionForm>
                   <ActionForm action={respondAction} className="space-y-2 border-t border-line pt-4">
                     <input type="hidden" name="id" value={assignment.id} />
-                    <input type="hidden" name="response" value="declined" />
+                    <input type="hidden" name="decision" value="declined" />
                     <label htmlFor="decline-reason" className="label">Reason for declining (required)</label>
                     <input id="decline-reason" name="reason" className="input" required minLength={5} maxLength={500} />
                     <SubmitButton variant="secondary">Decline assignment</SubmitButton>

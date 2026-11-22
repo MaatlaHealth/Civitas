@@ -28,13 +28,14 @@ const refresh = () => {
 
 export async function respondAction(_state: ActionState, formData: FormData): Promise<ActionState> {
   return runAction("crewRespond", async () => {
-    const { id, response, reason } = parseOrThrow(
-      idSchema.extend({ response: z.enum(["accepted", "declined"]), reason: z.string().trim().max(500).optional() }),
+    // The field is called "decision" because Netlify's edge rejects form posts that contain a field named "response".
+    const { id, decision, reason } = parseOrThrow(
+      idSchema.extend({ decision: z.enum(["accepted", "declined"]), reason: z.string().trim().max(500).optional() }),
       formDataToObject(formData),
     );
-    await respondToAssignment(await getActor(), id, response, reason || null);
+    await respondToAssignment(await getActor(), id, decision, reason || null);
     refresh();
-    return response === "accepted" ? "Assignment accepted." : "Assignment declined. The coordinator has been informed.";
+    return decision === "accepted" ? "Assignment accepted." : "Assignment declined. The coordinator has been informed.";
   });
 }
 

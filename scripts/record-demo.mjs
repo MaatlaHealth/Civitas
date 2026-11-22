@@ -19,7 +19,8 @@ const BASE_URL = (process.argv[2] ?? "http://localhost:3200").replace(/\/$/, "")
 const OUTPUT_DIRECTORY = "demo-video";
 const VIEWPORT = { width: 1280, height: 720 };
 const TYPING_DELAY_MS = 28;
-const REPORT_TITLE = "Water main leaking at the taxi rank";
+const REPORT_TITLE = "Storm drain blocked at the taxi rank";
+const CREW_NAME = "Demo Drainage Team";
 
 const scenes = [];
 let frame = 0;
@@ -136,10 +137,10 @@ async function record(page) {
   await page.goto(`${BASE_URL}/report`);
   scene("2 Citizen reports an incident");
   await pause(1500);
-  await page.getByLabel("Category").selectOption("water_leak");
+  await page.getByLabel("Category").selectOption("blocked_drain");
   await pause(1800);
   await type(page.getByLabel("Short title"), REPORT_TITLE);
-  await type(page.getByLabel("Description"), "Water is pouring out of the road next to the taxi rank and running into the street.");
+  await type(page.getByLabel("Description"), "The storm drain next to the taxi rank is blocked and dirty water is spreading across the road.");
   await page.getByLabel("Is a road or walkway blocked?").selectOption("yes");
   await pause(600);
 
@@ -191,15 +192,15 @@ async function record(page) {
   await openIncident(reference);
   scene("8 Verify and assign a crew");
   await click(page.getByRole("button", { name: "Verify the report" }));
-  await page.getByRole("button", { name: "Assign Demo Water Team" }).waitFor();
+  await page.getByRole("button", { name: `Assign ${CREW_NAME}` }).waitFor();
   await show(page.getByRole("heading", { name: "Crew assignment" }), 5500);
-  await click(page.getByRole("button", { name: "Assign Demo Water Team" }));
+  await click(page.getByRole("button", { name: `Assign ${CREW_NAME}` }));
   await page.getByText("Assigned (awaiting crew response)").first().waitFor();
   await pause(2500);
   await signOut();
 
   // ----- 4. Crew -----
-  await signIn("Sipho", "crew", "Demo Water Team");
+  await signIn("Sipho", "crew", CREW_NAME);
   scene("9 Crew does the job");
   await pause(2500);
   await click(page.getByRole("link", { name: new RegExp(REPORT_TITLE) }));
@@ -208,7 +209,7 @@ async function record(page) {
   await click(page.getByRole("button", { name: "Start work" }));
   const notes = page.getByLabel(/Completion notes/);
   await notes.scrollIntoViewIfNeeded();
-  await type(notes, "Clamped the leak and replaced the damaged section of pipe.");
+  await type(notes, "Cleared the blockage and flushed the drain. Water is draining normally.");
   await click(page.getByRole("button", { name: "Mark work complete" }));
   await page.getByText("Waiting for coordinator verification").waitFor();
   await pause(2500);
@@ -222,7 +223,7 @@ async function record(page) {
   await page.getByRole("button", { name: "Close the incident" }).waitFor();
   const update = page.getByLabel("Publish an update to the reporter");
   await update.scrollIntoViewIfNeeded();
-  await type(update, "The leak has been repaired and the road is open again.");
+  await type(update, "The drain has been cleared and the road is open again.");
   await click(page.getByRole("button", { name: "Publish update" }));
   await page.getByText("Update published.").waitFor();
   await click(page.getByRole("button", { name: "Close the incident" }));

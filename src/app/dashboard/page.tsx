@@ -1,0 +1,126 @@
+import { ClipboardCheck, Inbox } from "lucide-react";
+import Link from "next/link";
+import { AssignmentBadge, PriorityBadge, StatusBadge } from "@/components/ui/badges";
+import { ButtonLink } from "@/components/ui/button";
+import { Card, CardHeader, EmptyState, PageHeader } from "@/components/ui/layout";
+import { requireCoordinatorSession } from "@/lib/auth/session";
+import { categoryLabel } from "@/lib/domain/categories";
+import { formatDateTime } from "@/lib/format";
+import { getOverview } from "@/lib/services/analytics";
+import { listAssignmentsNeedingAttention } from "@/lib/services/assignments";
+import { listIncidents } from "@/lib/services/incidents";
+
+interface Statistic {
+  label: string;
+  value: number;
+  href: string;
+  emphasis?: boolean;
+}
+
+export default async function DashboardOverviewPage() {
+  const { actor } = await requireCoordinatorSession();
+  const [overview, reviewQueue, attention] = await Promise.all([
+    getOverview(actor),
+    listIncidents(actor, { review: "needs_review", sort: "priority" }),
+    listAssignmentsNeedingAttention(actor),
+  ]);
+
+  const statistics: Statistic[] = [
+    { label: "Active incidents", value: overview.activeIncidents, href: "/dashboard/incidents" },
+    { label: "Awaiting review", value: overview.awaitingReview, href: "/dashboard/incidents?review=needs_review", emphasis: overview.awaitingReview > 0 },
+    { label: "Critical (active)", value: overview.critical, href: "/dashboard/incidents?priority=critical", emphasis: overview.critical > 0 },
+    { label: "High priority (active)", value: overview.high, href: "/dashboard/incidents?priority=high" },
+    { label: "In progress", value: overview.inProgress, href: "/dashboard/incidents?status=in_progress" },
+    { label: "Resolved or closed", value: overview.resolved, href: "/dashboard/incidents?status=resolved" },
+    { label: "Available crews", value: overview.availableCrews, href: "/dashboard/crews" },
+    { label: "Possible duplicates to review", value: overview.pendingDuplicates, href: "/dashboard/duplicates", emphasis: overview.pendingDuplicates > 0 },
+  ];
+
+  return (
+    <>
+      <PageHeader
+        title="Operations overview"
+        description="Every figure on this page is counted from stored records at the time the page loads."
+        actions={<ButtonLink href="/dashboard/planning">Open planning</ButtonLink>}
+      />
+
+      <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {statistics.map((statistic) => (
+          <li key={statistic.label}>
+            <Link
+              href={statistic.href}
+              className={`block h-full rounded-lg border bg-white px-4 py-3 shadow-xs transition-colors hover:border-teal-600 ${
+                statistic.emphasis ? "border-amber-500" : "border-line"
+              }`}
+            >
+              <span className="block text-3xl font-bold text-navy-900 tabular-nums">{statistic.value}</span>
+              <span className="mt-0.5 block text-sm text-ink-muted">{statistic.label}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-6 grid gap-6 xl:grid-cols-2">
+        <Card>
+          <CardHeader
+            title="Review queue"
+            description="Reports waiting for a coordinator, highest provisional priority first."
+            action={<ButtonLink href="/dashboard/incidents?review=needs_review" variant="secondary" size="sm">View all</ButtonLink>}
+          />
+          {reviewQueue.items.length === 0 ? (
+            <EmptyState icon={Inbox} title="Nothing is waiting for review">
+              New citizen reports appear here as soon as they are submitted.
+            </EmptyState>
+          ) : (
+            <ul className="divide-y divide-line">
+              {reviewQueue.items.slice(0, 8).map((incident) => (
+                <li key={incident.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 sm:px-5">
+                  <div className="min-w-0">
+                    <Link href={`/dashboard/incidents/${incident.id}`} className="font-medium text-navy-900 hover:underline">
+                      {incident.title}
+                    </Link>
+                    <p className="text-xs text-ink-muted">
+                      <span className="font-mono">{incident.reference}</span> · {categoryLabel(incident.category)} · {formatDateTime(incident.createdAt)}
+                    </p>
+                  </div>
+                  <div className="flex gap-1.5">
+                    <PriorityBadge band={incident.priorityBand} provisional />
+                    <StatusBadge status={incident.status} />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
+
+        <Card>
+          <CardHeader title="Assignments needing your attention" description="Proposals to approve, completed work to verify, and requests for assistance." />
+          {attention.length === 0 ? (
+            <EmptyState icon={ClipboardCheck} title="No assignments need attention">
+              Proposals, completed jobs and crew requests for assistance are listed here.
+            </EmptyState>
+          ) : (
+            <ul className="divide-y divide-line">
+              {attention.map((assignment) => (
+                <li key={assignment.id} className="px-4 py-3 sm:px-5">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <Link href={`/dashboard/incidents/${assignment.incidentId}#assignment`} className="font-medium text-navy-900 hover:underline">
+                      {assignment.title}
+                    </Link>
+                    <AssignmentBadge status={assignment.status} />
+                  </div>
+                  <p className="text-xs text-ink-muted">
+                    <span className="font-mono">{assignment.reference}</span> · {assignment.crewName}
+                  </p>
+                  {assignment.assistanceRequested ? (
+                    <p className="mt-1 text-sm font-medium text-red-800">Assistance requested: {assignment.assistanceNote}</p>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
+      </div>
+    </>
+  );
+}

@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Brand palette, sampled from the Civitas logo. */
+  --color-navy-950: #061d36;
+  --color-navy-900: #082d52;
+  --color-navy-800: #0e3a68;
+  --color-navy-700: #1a4c80;
+  --color-navy-200: #c3d3e6;
+  --color-navy-100: #dce6f1;
+  --color-navy-50: #eef3f9;
+
+  --color-teal-800: #0b5a5e;
+  --color-teal-700: #0f6f74;
+  --color-teal-600: #168f95;
+  --color-teal-100: #d5eeef;
+  --color-teal-50: #eaf6f7;
+
+  --color-amber-700: #a55f05;
+  --color-amber-600: #d9820a;
+  --color-amber-500: #f59a13;
+  --color-amber-100: #fdeccf;
+  --color-amber-50: #fff7e8;
+
+  --color-canvas: #f6f8fa;
+  --color-line: #d9e0e8;
+  --color-ink: #10233b;
+  --color-ink-muted: #51627a;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-teal-600);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    color: var(--color-navy-900);
+    letter-spacing: -0.01em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .input {
+    @apply block w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink shadow-xs placeholder:text-slate-400 focus:border-teal-600 disabled:bg-slate-100;
+  }
+
+  .input[aria-invalid="true"] {
+    @apply border-red-600;
+  }
+
+  .label {
+    @apply mb-1 block text-sm font-medium text-navy-900;
+  }
+
+  .table-header {
+    @apply border-b border-line bg-navy-50 px-3 py-2.5 text-left text-xs font-semibold tracking-wide text-navy-900 uppercase;
+  }
+
+  .table-cell {
+    @apply border-b border-line px-3 py-2.5 align-top text-sm;
+  }
+
+  .prose-civitas h2 {
+    @apply mt-10 mb-3 text-xl font-semibold;
+  }
+
+  .prose-civitas h3 {
+    @apply mt-6 mb-2 text-base font-semibold;
+  }
+
+  .prose-civitas p,
+  .prose-civitas li {
+    @apply leading-relaxed text-ink;
+  }
+
+  .prose-civitas p {
+    @apply mb-4;
+  }
+
+  .prose-civitas ul {
+    @apply mb-4 list-disc space-y-1.5 pl-6;
+  }
+
+  .prose-civitas ol {
+    @apply mb-4 list-decimal space-y-1.5 pl-6;
+  }
+
+  .prose-civitas a {
+    @apply font-medium text-teal-700 underline underline-offset-2;
+  }
+
+  .prose-civitas code {
+    @apply rounded bg-navy-50 px-1 py-0.5 font-mono text-[0.9em];
+  }
+}
+
+/* Keep MapLibre's attribution legible and its controls keyboard-visible. */
+.maplibregl-ctrl-attrib {
+  font-size: 11px;
+}

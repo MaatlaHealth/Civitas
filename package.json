@@ -1,0 +1,58 @@
+{
+  "name": "civitas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Civitas: from citizen reports to coordinated infrastructure response.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.9"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "build:netlify": "tsx scripts/migrate.ts && next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "playwright test",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "users:create": "tsx scripts/create-user.ts",
+    "retention:purge": "tsx scripts/retention-purge.ts"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.17",
+    "@netlify/blobs": "^11.1.9",
+    "bcryptjs": "^3.0.3",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.45.4",
+    "lucide-react": "^1.77.0",
+    "maplibre-gl": "^5.9.0",
+    "next": "16.4.6",
+    "next-auth": "5.0.0-beta.32",
+    "pg": "^8.23.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "recharts": "^3.11.0",
+    "sharp": "^0.35.5",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.11.10",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^9.39.0",
+    "eslint-config-next": "16.4.6",
+    "tailwindcss": "^4.3.5",
+    "tsx": "^4.23.15",
+    "typescript": "~5.9.3",
+    "vitest": "^4.0.0"
+  }
+}

@@ -1,0 +1,25 @@
+node_modules/
+.next/
+.netlify/
+out/
+dist/
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+
+# Local embedded database and uploaded files (development only)
+.data/
+
+# Test artifacts
+playwright-report/
+test-results/
+coverage/
+tests/e2e/.auth/
+
+*.tsbuildinfo
+next-env.d.ts
+*.log
+.DS_Store
+Thumbs.db

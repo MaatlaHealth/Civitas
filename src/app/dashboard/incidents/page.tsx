@@ -141,7 +141,7 @@ export default async function IncidentsPage({ searchParams }: { searchParams: Pr
             Clear the filters to see every incident, or wait for new citizen reports.
           </EmptyState>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="relative overflow-x-auto">
             <table className="w-full min-w-[820px] border-collapse">
               <caption className="sr-only">Incidents matching the current filters</caption>
               <thead>

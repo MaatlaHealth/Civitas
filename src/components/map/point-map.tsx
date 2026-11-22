@@ -1,6 +1,6 @@
 "use client";
 
-import maplibregl from "maplibre-gl";
+import * as maplibregl from "maplibre-gl";
 import { useEffect, useRef } from "react";
 import { MAP_CONFIG } from "./map-config";
 import { useMap } from "./use-map";

@@ -10,8 +10,8 @@ import type { IncidentDetail } from "@/lib/services/incidents";
 /** Reusable factor table: also used by the training scenario. */
 export function PriorityFactorTable({ factors }: { factors: PriorityFactor[] }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[520px] border-collapse">
+    <div className="relative overflow-x-auto">
+      <table className="w-full min-w-[400px] border-collapse">
         <caption className="sr-only">Priority score factors</caption>
         <thead>
           <tr>
@@ -24,7 +24,7 @@ export function PriorityFactorTable({ factors }: { factors: PriorityFactor[] }) 
         <tbody>
           {factors.map((factor) => (
             <tr key={factor.key}>
-              <th scope="row" className="table-cell text-left font-medium whitespace-nowrap">{factor.label}</th>
+              <th scope="row" className="table-cell text-left font-medium">{factor.label}</th>
               <td className="table-cell text-right tabular-nums">{factor.weight.toFixed(2)}</td>
               <td className="table-cell text-right tabular-nums">
                 {factor.value === null ? <span className="font-semibold text-amber-700">Unknown</span> : factor.value.toFixed(2)}

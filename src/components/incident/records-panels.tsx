@@ -119,7 +119,7 @@ export function AuditPanel({ detail }: { detail: IncidentDetail }) {
   return (
     <Card>
       <CardHeader title="Audit trail" description="Every recorded action on this incident, newest first." />
-      <div className="max-h-96 overflow-auto">
+      <div className="relative max-h-96 overflow-auto">
         <table className="w-full min-w-[560px] border-collapse">
           <caption className="sr-only">Audit trail for this incident</caption>
           <thead>

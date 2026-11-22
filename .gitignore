@@ -23,3 +23,6 @@ next-env.d.ts
 *.log
 .DS_Store
 Thumbs.db
+
+# Copied from node_modules at build time (scripts/copy-map-worker.mjs)
+public/vendor/

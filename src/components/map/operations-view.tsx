@@ -124,7 +124,7 @@ export function OperationsView({ incidents, crews, assets }: OperationsViewProps
             {visible.length === 0 ? (
               <p className="p-4 text-sm text-ink-muted">No open incidents match these filters.</p>
             ) : (
-              <ul className="max-h-[420px] divide-y divide-line overflow-auto">
+              <ul className="relative max-h-[420px] divide-y divide-line overflow-auto">
                 {visible.map((incident) => (
                   <li key={incident.id}>
                     <button

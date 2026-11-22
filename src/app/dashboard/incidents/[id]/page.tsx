@@ -68,12 +68,12 @@ export default async function IncidentDetailPage({ params }: { params: Promise<{
       ) : null}
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-6">
           <SubmissionPanel detail={detail} />
           <AnalysisPanel detail={detail} />
           <NotesPanel detail={detail} />
         </div>
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-6">
           <StatusPanel detail={detail} />
           <ClassificationPanel detail={detail} />
           <PriorityPanel detail={detail} />

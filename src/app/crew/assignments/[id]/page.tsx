@@ -61,7 +61,7 @@ export default async function CrewAssignmentPage({ params }: { params: Promise<{
       ) : null}
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-6">
           <Card>
             <CardHeader title="Job details" description={`Reported ${formatDateTime(incident.createdAt)}`} />
             <CardBody className="space-y-4">
@@ -94,7 +94,7 @@ export default async function CrewAssignmentPage({ params }: { params: Promise<{
           </Card>
         </div>
 
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-6">
           <Card>
             <CardHeader title="Update this job" />
             <CardBody className="space-y-5">

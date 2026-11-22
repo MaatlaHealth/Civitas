@@ -1,9 +1,13 @@
 "use client";
 
-import maplibregl from "maplibre-gl";
+import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { MAP_CONFIG } from "./map-config";
+
+// MapLibre 6 runs its tile processing in a module worker served from this
+// site's own origin (copied into /public by scripts/copy-map-worker.mjs).
+maplibregl.setWorkerUrl("/vendor/maplibre/maplibre-gl-worker.mjs");
 
 export type MapStatus = "loading" | "ready" | "error";
 
@@ -53,7 +57,8 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, options: 
       setStatus("ready");
       setMap(instance);
     });
-    instance.on("error", () => {
+    instance.on("error", (event) => {
+      console.warn("Map error:", event.error?.message ?? "unknown");
       // Individual tile failures after load are tolerated; a failure before
       // the style has loaded means there is no usable map.
       if (!loaded) setStatus("error");

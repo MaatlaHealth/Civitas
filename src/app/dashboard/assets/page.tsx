@@ -33,7 +33,7 @@ export default async function AssetsPage() {
             Until assets are registered, consequence screening reports that no registered assets are nearby.
           </EmptyState>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="relative overflow-x-auto">
             <table className="w-full min-w-[860px] border-collapse">
               <caption className="sr-only">Registered infrastructure assets</caption>
               <thead>

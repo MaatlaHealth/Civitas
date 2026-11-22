@@ -1,6 +1,7 @@
 "use client";
 
-import maplibregl, { type GeoJSONSource } from "maplibre-gl";
+import * as maplibregl from "maplibre-gl";
+import type { GeoJSONSource } from "maplibre-gl";
 import { useEffect, useRef } from "react";
 import { PRIORITY_COLORS } from "@/components/ui/badges";
 import { PRIORITY_BANDS, PRIORITY_LABELS, type PriorityBand } from "@/lib/domain/types";
@@ -167,11 +168,11 @@ export function OperationsMap({ incidents, crews, assets, selectedId, onSelect }
       map.on("mouseleave", layer, hidePopup);
     }
 
-    map.on("click", LAYER.incidents, (event) => {
+    map.on("click", LAYER.incidents, (event: maplibregl.MapLayerMouseEvent) => {
       const id = event.features?.[0]?.properties.id;
       if (typeof id === "string") onSelectRef.current(id);
     });
-    map.on("click", LAYER.clusters, async (event) => {
+    map.on("click", LAYER.clusters, async (event: maplibregl.MapLayerMouseEvent) => {
       const feature = event.features?.[0];
       if (!feature || feature.geometry.type !== "Point") return;
       const source = map.getSource<GeoJSONSource>(SOURCE.incidents);

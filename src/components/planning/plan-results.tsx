@@ -44,7 +44,7 @@ function MetricsTable({ fifo, civitas }: { fifo: Plan | null; civitas: Plan | nu
     plan ? `${row.value(plan).toFixed(row.digits)}${row.unit && row.digits > 0 ? ` ${row.unit}` : ""}` : "Not run";
 
   return (
-    <div className="overflow-x-auto">
+    <div className="relative overflow-x-auto">
       <table className="w-full min-w-[560px] border-collapse" data-testid="plan-metrics">
         <caption className="sr-only">Comparison of planning strategies</caption>
         <thead>

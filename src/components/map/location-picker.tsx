@@ -1,7 +1,7 @@
 "use client";
 
 import { Crosshair, Loader2 } from "lucide-react";
-import maplibregl from "maplibre-gl";
+import * as maplibregl from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Notice } from "@/components/ui/layout";

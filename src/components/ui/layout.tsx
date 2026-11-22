@@ -3,7 +3,8 @@ import { AlertTriangle, CheckCircle2, Info, XCircle, type LucideIcon } from "luc
 import type { ReactNode } from "react";
 
 export function Card({ children, className }: { children: ReactNode; className?: string }) {
-  return <section className={clsx("rounded-lg border border-line bg-white shadow-xs", className)}>{children}</section>;
+  // min-w-0 lets a card inside a grid or flex row shrink, so wide tables scroll inside it instead of widening the page.
+  return <section className={clsx("min-w-0 rounded-lg border border-line bg-white shadow-xs", className)}>{children}</section>;
 }
 
 export function CardHeader({ title, description, action }: { title: string; description?: ReactNode; action?: ReactNode }) {

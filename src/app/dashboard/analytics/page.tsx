@@ -94,7 +94,7 @@ export default async function AnalyticsPage() {
         </Card>
         <Card>
           <CardHeader title="Time between workflow stages" description="Measured from the first time each incident reached each status." />
-          <div className="overflow-x-auto">
+          <div className="relative overflow-x-auto">
             <table className="w-full min-w-[480px] border-collapse">
               <caption className="sr-only">Time between workflow stages</caption>
               <thead>

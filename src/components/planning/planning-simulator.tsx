@@ -103,7 +103,7 @@ export function PlanningSimulator({ incidents, crews: initialCrews, showSchemati
       <div className="grid gap-6 xl:grid-cols-2">
         <fieldset className="min-w-0 rounded-lg border border-line bg-white p-4">
           <legend className="px-1 text-sm font-semibold text-navy-900">Unresolved incidents to plan ({selected.size} of {incidents.length} selected)</legend>
-          <ul className="max-h-96 space-y-1 overflow-auto">
+          <ul className="relative max-h-96 space-y-1 overflow-auto">
             {incidents.map((incident) => (
               <li key={incident.id}>
                 <label className="flex items-start gap-2.5 rounded-md px-2 py-1.5 text-sm hover:bg-navy-50">
@@ -124,7 +124,7 @@ export function PlanningSimulator({ incidents, crews: initialCrews, showSchemati
           {crews.length === 0 ? (
             <p className="p-4 text-sm text-ink-muted">No crews exist. Add crews on the Crews page.</p>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="relative overflow-x-auto">
               <table className="w-full min-w-[480px] border-collapse">
                 <caption className="sr-only">Crews available to the simulation</caption>
                 <thead>

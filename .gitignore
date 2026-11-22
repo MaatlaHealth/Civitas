@@ -26,3 +26,6 @@ Thumbs.db
 
 # Copied from node_modules at build time (scripts/copy-map-worker.mjs)
 public/vendor/
+
+# Recorded walkthrough video (large; upload it to a video host instead)
+demo-video/

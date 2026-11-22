@@ -19,7 +19,7 @@ const BASE_URL = (process.argv[2] ?? "http://localhost:3200").replace(/\/$/, "")
 const OUTPUT_DIRECTORY = "demo-video";
 const VIEWPORT = { width: 1280, height: 720 };
 const TYPING_DELAY_MS = 28;
-const REPORT_TITLE = "Storm drain blocked at the taxi rank";
+const REPORT_TITLE = "Blocked storm drain outside the clinic";
 const CREW_NAME = "Demo Drainage Team";
 
 const scenes = [];
@@ -140,7 +140,7 @@ async function record(page) {
   await page.getByLabel("Category").selectOption("blocked_drain");
   await pause(1800);
   await type(page.getByLabel("Short title"), REPORT_TITLE);
-  await type(page.getByLabel("Description"), "The storm drain next to the taxi rank is blocked and dirty water is spreading across the road.");
+  await type(page.getByLabel("Description"), "The storm drain outside the clinic entrance is blocked and dirty water is spreading across the road.");
   await page.getByLabel("Is a road or walkway blocked?").selectOption("yes");
   await pause(600);
 

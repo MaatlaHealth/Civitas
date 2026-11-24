@@ -160,11 +160,11 @@ export function TrackIncident() {
           </p>
           <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
             <div>
-              <dt className="text-xs font-semibold tracking-wide text-ink-muted uppercase">Reported</dt>
+              <dt className="text-xs font-semibold text-ink-muted">Reported</dt>
               <dd>{formatDateTime(incident.reportedAt)}</dd>
             </div>
             <div>
-              <dt className="text-xs font-semibold tracking-wide text-ink-muted uppercase">Last updated</dt>
+              <dt className="text-xs font-semibold text-ink-muted">Last updated</dt>
               <dd>{formatDateTime(incident.lastUpdatedAt)}</dd>
             </div>
           </dl>

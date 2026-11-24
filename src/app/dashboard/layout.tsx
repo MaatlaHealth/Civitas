@@ -15,6 +15,7 @@ const NAVIGATION = [
   { href: "/dashboard/planning", label: "Planning" },
   { href: "/dashboard/analytics", label: "Analytics" },
   { href: "/dashboard/assets", label: "Assets" },
+  { href: "/dashboard/team", label: "Team" },
 ];
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {

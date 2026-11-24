@@ -56,13 +56,13 @@ export function ReportConfirmation({ receipt }: { receipt: SubmissionReceipt }) 
       <div className="rounded-lg border-2 border-navy-900 bg-white p-5">
         <dl className="grid gap-4 sm:grid-cols-2">
           <div>
-            <dt className="text-xs font-semibold tracking-wide text-ink-muted uppercase">Reference</dt>
+            <dt className="text-xs font-semibold text-ink-muted">Reference</dt>
             <dd className="mt-1 font-mono text-xl font-bold text-navy-900" data-testid="reference">
               {receipt.reference}
             </dd>
           </div>
           <div>
-            <dt className="text-xs font-semibold tracking-wide text-ink-muted uppercase">Access code</dt>
+            <dt className="text-xs font-semibold text-ink-muted">Access code</dt>
             <dd className="mt-1 font-mono text-xl font-bold break-all text-navy-900" data-testid="access-code" data-code={receipt.accessCode}>
               {formatAccessCode(receipt.accessCode)}
             </dd>

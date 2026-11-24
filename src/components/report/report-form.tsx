@@ -255,7 +255,7 @@ export function ReportForm({ openAccess = false }: { openAccess?: boolean }) {
         <legend className="text-lg font-semibold text-navy-900">4. Your details (optional)</legend>
         {openAccess ? (
           <Notice tone="warning" title="Details entered here are not private on this site">
-            This evaluation site lets anyone sign in to the staff workspaces, where contact details and photographs are
+            This demo site lets anyone sign in to the staff workspaces, where contact details and photographs are
             shown. Report anonymously or use made-up details.
           </Notice>
         ) : null}

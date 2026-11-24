@@ -126,7 +126,7 @@ test("staff pages and data require the right role", async ({ page, request }) =>
 test("the coordinator reviews the report, confirms the duplicate, verifies and assigns a crew", async ({ page }) => {
   await signIn(page, E2E_ACCOUNTS.coordinator);
   await expect(page.getByRole("heading", { name: "Operations overview" })).toBeVisible();
-  await expect(page.getByText("Evaluation account")).toBeVisible();
+  await expect(page.getByText("Demo account")).toBeVisible();
 
   await openIncident(page, firstReport.reference);
   // Priority was calculated by the rule engine at intake and is explained.

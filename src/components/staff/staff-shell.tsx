@@ -33,7 +33,7 @@ export function StaffShell({ workspace, homeHref, navigation, userName, isEvalua
         <StaffNav items={navigation} />
         <div className="border-t border-navy-800 px-4 py-3 lg:mt-auto">
           <p className="truncate text-sm font-medium text-white">{userName}</p>
-          {isEvaluation ? <p className="text-xs text-amber-500">Evaluation account</p> : null}
+          {isEvaluation ? <p className="text-xs text-amber-500">Demo account</p> : null}
           <form action={logoutAction} className="mt-2">
             <button type="submit" className="inline-flex items-center gap-1.5 text-sm text-navy-100 underline-offset-4 hover:text-white hover:underline">
               <LogOut aria-hidden className="size-4" /> Sign out

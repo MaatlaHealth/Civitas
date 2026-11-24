@@ -13,7 +13,7 @@ test("a visitor signs in with just a name as coordinator, then as a crew member"
   await page.getByRole("button", { name: "Continue as coordinator" }).click();
   await page.waitForURL(/\/dashboard/);
   await expect(page.getByText("Judge Naledi")).toBeVisible();
-  await expect(page.getByText("Evaluation account")).toBeVisible();
+  await expect(page.getByText("Demo account")).toBeVisible();
   await expect(page.getByText("please use made-up details")).toBeVisible();
 
   await page.getByRole("button", { name: "Sign out" }).click();

@@ -3,7 +3,7 @@
  *
  *   node scripts/record-demo.mjs https://your-site.example
  *
- * The site must have open evaluation access on (CIVITAS_OPEN_ACCESS=true).
+ * The site must have name-only demo sign-in on (CIVITAS_OPEN_ACCESS=true).
  * The script drives the real interface: it submits one made-up report and
  * takes it through review, assignment, crew work and closure. If no demo
  * crews exist it first uses the "Load demonstration data" button.

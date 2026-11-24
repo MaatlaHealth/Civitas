@@ -1,22 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Overpass, Public_Sans } from "next/font/google";
 import type { ReactNode } from "react";
-import { EvaluationBanner } from "@/components/site/evaluation-banner";
+import { DemoBanner } from "@/components/site/demo-banner";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+// Overpass descends from road-sign lettering, which suits the subject; Public Sans is a plain civic text face.
+const display = Overpass({ subsets: ["latin"], variable: "--font-civitas-display", display: "swap", weight: ["600", "700", "800"] });
+const text = Public_Sans({ subsets: ["latin"], variable: "--font-civitas-text", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "Civitas | Infrastructure incident intelligence", template: "%s | Civitas" },
+  title: { default: "Civitas | Incident management for municipal infrastructure", template: "%s | Civitas" },
   description:
-    "Civitas turns community infrastructure reports into actionable intelligence, helping engineering teams identify problems, prioritise responses and coordinate repairs.",
+    "Civitas takes infrastructure reports from residents, finds the duplicates, ranks what is urgent and matches each job to the right crew, with a coordinator approving every step.",
 };
 
 export const viewport: Viewport = { themeColor: "#082d52", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${display.variable} ${text.variable}`}>
       <body className="min-h-screen">
         <a
           href="#main-content"
@@ -24,7 +26,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           Skip to main content
         </a>
-        <EvaluationBanner />
+        <DemoBanner />
         {children}
       </body>
     </html>

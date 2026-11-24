@@ -7,9 +7,9 @@ import { USER_ROLES, type UserRole } from "@/lib/domain/types";
 import { getOrganizationId } from "./core";
 
 /**
- * Open evaluation access: sign in with a name only, no password.
+ * Open demo access: sign in with a name only, no password.
  *
- * This exists so hackathon judges can try the coordinator and crew
+ * This exists so prospective customers can try the coordinator and crew
  * workspaces without being sent credentials. It removes the protection on
  * everything staff can see, including reporter contact details and
  * photographs, so it is off unless CIVITAS_OPEN_ACCESS is set to "true" and
@@ -37,7 +37,7 @@ export async function listCrewsForOpenAccess(): Promise<Array<{ id: string; name
 }
 
 /**
- * Creates a labelled evaluation account for this visitor. The stored
+ * Creates a labelled demo account for this visitor. The stored
  * "password hash" is not a valid bcrypt hash, so the account can never be
  * used through the password sign-in.
  */
@@ -55,7 +55,7 @@ export async function createOpenAccessUser(input: { name: string; role: UserRole
       isEvaluation: true,
     })
     .returning({ id: users.id, name: users.name, email: users.email, role: users.role });
-  if (!user) throw new Error("The evaluation account could not be created.");
+  if (!user) throw new Error("The demo account could not be created.");
 
   if (input.role === "crew" && input.crewId) {
     const [crew] = await db.select({ id: maintenanceCrews.id }).from(maintenanceCrews).where(eq(maintenanceCrews.id, input.crewId)).limit(1);

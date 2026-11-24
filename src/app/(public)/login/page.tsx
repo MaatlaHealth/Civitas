@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { AccessFrame } from "@/components/site/access-frame";
 import { ActionForm, SubmitButton } from "@/components/ui/action-form";
 import { Notice } from "@/components/ui/layout";
 import { loginAction, openAccessAction } from "@/lib/actions/auth";
 import { getStaffSession } from "@/lib/auth/session";
+import { setupAvailable, setupCodeConfigured } from "@/lib/services/accounts";
 import { listCrewsForOpenAccess, openAccessEnabled } from "@/lib/services/open-access";
 
 export const metadata: Metadata = { title: "Sign in" };
@@ -13,10 +16,7 @@ async function OpenAccessForm() {
   const crews = await listCrewsForOpenAccess().catch(() => []);
   return (
     <>
-      <p className="mt-2 mb-6 text-sm text-ink-muted">
-        This is an evaluation site, so there are no passwords. Enter your name and choose which workspace to open.
-      </p>
-      <div className="rounded-lg border border-line bg-white p-6 shadow-xs">
+      <div className="rounded-lg border border-line bg-white p-6 shadow-xs sm:p-8">
         <ActionForm action={openAccessAction} className="space-y-4">
           <div>
             <label htmlFor="name" className="label">
@@ -62,13 +62,11 @@ async function OpenAccessForm() {
   );
 }
 
-function PasswordForm() {
+async function PasswordForm() {
+  const needsSetup = await setupAvailable().catch(() => false);
   return (
     <>
-      <p className="mt-2 mb-6 text-sm text-ink-muted">
-        For coordinators and maintenance crew members. You do not need an account to report or track an incident.
-      </p>
-      <div className="rounded-lg border border-line bg-white p-6 shadow-xs">
+      <div className="rounded-lg border border-line bg-white p-6 shadow-xs sm:p-8">
         <ActionForm action={loginAction} className="space-y-4">
           <div>
             <label htmlFor="email" className="label">
@@ -85,7 +83,24 @@ function PasswordForm() {
           <SubmitButton className="w-full">Sign in</SubmitButton>
         </ActionForm>
       </div>
-      <Notice className="mt-6">Accounts are created by an administrator. Sessions end after eight hours.</Notice>
+      {needsSetup ? (
+        <Notice className="mt-6" title="No accounts exist yet">
+          {setupCodeConfigured() ? (
+            <>
+              <Link href="/setup" className="font-semibold underline underline-offset-2">
+                Create the first coordinator account
+              </Link>{" "}
+              using your setup code.
+            </>
+          ) : (
+            "The site owner needs to set a setup code before the first account can be created."
+          )}
+        </Notice>
+      ) : (
+        <p className="mt-4 text-sm text-ink-muted">
+          Forgotten your password? Ask a coordinator in your organisation to set a new one from the Team page.
+        </p>
+      )}
     </>
   );
 }
@@ -93,11 +108,18 @@ function PasswordForm() {
 export default async function LoginPage() {
   const session = await getStaffSession().catch(() => null);
   if (session) redirect(session.actor.kind === "coordinator" ? "/dashboard" : "/crew");
+  const open = openAccessEnabled();
 
   return (
-    <div className="mx-auto max-w-md px-4 py-12 sm:px-6">
-      <h1 className="text-3xl font-bold">Sign in</h1>
-      {openAccessEnabled() ? <OpenAccessForm /> : <PasswordForm />}
-    </div>
+    <AccessFrame
+      title="Sign in"
+      intro={
+        open
+          ? "This is a demonstration site, so there are no passwords. Enter your name and choose which workspace to open."
+          : "For coordinators and maintenance crews."
+      }
+    >
+      {open ? <OpenAccessForm /> : <PasswordForm />}
+    </AccessFrame>
   );
 }

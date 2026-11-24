@@ -90,7 +90,7 @@ export function DefinitionList({ items }: { items: Array<{ term: string; detail:
     <dl className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
       {items.map((item) => (
         <div key={item.term} className="min-w-0">
-          <dt className="text-xs font-semibold tracking-wide text-ink-muted uppercase">{item.term}</dt>
+          <dt className="text-xs font-semibold text-ink-muted">{item.term}</dt>
           <dd className="mt-0.5 text-sm break-words">{item.detail}</dd>
         </div>
       ))}

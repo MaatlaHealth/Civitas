@@ -6,11 +6,11 @@ import { ButtonLink } from "@/components/ui/button";
 export const metadata: Metadata = {
   title: "Transparency and Limitations",
   description:
-    "What the AI in Civitas does and does not do, which parts are deterministic, the known limitations, and what an evaluation deployment means.",
+    "What the AI in Civitas does and does not do, which parts are deterministic, the known limitations, and what the demonstration site is.",
 };
 
 const SECTIONS = [
-  { id: "evaluation", label: "Evaluation deployment" },
+  { id: "evaluation", label: "This demonstration site" },
   { id: "ai", label: "What the AI does" },
   { id: "deterministic", label: "What is deterministic" },
   { id: "limitations", label: "Limitations" },
@@ -138,7 +138,6 @@ export default function TransparencyPage() {
     <div>
       <header className="border-b border-line bg-white">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-          <p className="text-xs font-semibold tracking-widest text-teal-700 uppercase">Transparency</p>
           <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Transparency and Limitations</h1>
           <p className="mt-4 max-w-3xl text-lg leading-relaxed text-ink">
             Civitas is a decision-support tool. This page states plainly what it does, what it leaves to people, and
@@ -149,7 +148,7 @@ export default function TransparencyPage() {
 
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-14 lg:py-16">
         <nav aria-label="On this page" className="h-fit rounded-lg border border-line bg-white p-4 lg:sticky lg:top-6">
-          <p className="text-xs font-semibold tracking-wide text-ink-muted uppercase">On this page</p>
+          <p className="text-xs font-semibold text-ink-muted">On this page</p>
           <ul className="mt-3 space-y-1 text-sm">
             {SECTIONS.map((section) => (
               <li key={section.id}>
@@ -168,18 +167,18 @@ export default function TransparencyPage() {
                 <AlertTriangle aria-hidden className="mt-1 size-5 shrink-0" />
                 <div className="min-w-0">
                   <h2 id="evaluation-heading" className="text-xl font-semibold">
-                    What &ldquo;evaluation deployment&rdquo; means
+                    What this demonstration site is
                   </h2>
                   <p className="mt-3 leading-relaxed">
-                    Civitas was built for the EvoHacks 2 hackathon under the theme &ldquo;Projects for Social
-                    Good&rdquo;. This site exists so that the software can be examined and tested.
+                    Civitas is new software. This site exists so that municipalities, utilities and residents can
+                    see how it works before anyone depends on it.
                   </p>
                   <ul className="mt-3 list-disc space-y-1.5 pl-5 leading-relaxed">
-                    <li>It is not deployed with, operated by or used by any municipality.</li>
+                    <li>It is not yet operated by or connected to any municipality.</li>
                     <li>A report submitted here does not reach a municipal response team and will not lead to a repair.</li>
                     <li>It is not an emergency service and is not monitored in real time.</li>
-                    <li>Data in this deployment may be deleted at any time.</li>
-                    <li>Please do not submit personal information you would not want evaluators to see.</li>
+                    <li>Data on this site may be deleted at any time.</li>
+                    <li>Please do not submit real personal information here.</li>
                   </ul>
                 </div>
               </div>

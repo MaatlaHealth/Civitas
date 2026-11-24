@@ -43,15 +43,15 @@ export default async function CrewsPage() {
                 <CardBody className="space-y-4">
                   <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
                     <div>
-                      <dt className="text-xs font-semibold tracking-wide text-ink-muted uppercase">Workload</dt>
+                      <dt className="text-xs font-semibold text-ink-muted">Workload</dt>
                       <dd className="tabular-nums">{crew.activeWorkload} of {crew.capacity} jobs</dd>
                     </div>
                     <div>
-                      <dt className="text-xs font-semibold tracking-wide text-ink-muted uppercase">Base position</dt>
+                      <dt className="text-xs font-semibold text-ink-muted">Base position</dt>
                       <dd className="tabular-nums">{crew.baseLatitude.toFixed(4)}, {crew.baseLongitude.toFixed(4)}</dd>
                     </div>
                     <div>
-                      <dt className="text-xs font-semibold tracking-wide text-ink-muted uppercase">Shift</dt>
+                      <dt className="text-xs font-semibold text-ink-muted">Shift</dt>
                       <dd>{crew.shiftNotes ?? "Not recorded"}</dd>
                     </div>
                   </dl>

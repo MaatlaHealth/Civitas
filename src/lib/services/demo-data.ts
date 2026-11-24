@@ -16,22 +16,22 @@ import { submitIncident } from "./intake";
 import { openAccessEnabled } from "./open-access";
 
 /**
- * Demonstration data for an evaluation deployment.
+ * Demonstration data for a demo site.
  *
  * Everything created here is invented and says so: crews are named "Demo
  * ...", every report's address and description state that it is not a real
  * incident, and assets are named "(not a real asset)" and left unverified.
  * The records are created through the same services as real ones, so the
  * duplicate matches, priority scores and crew recommendations on screen are
- * computed, not scripted. Loading is only allowed where open evaluation
+ * computed, not scripted. Loading is only allowed where open demo
  * access is on, which is never a deployment holding real reports.
  *
  * Each step checks what already exists, so loading can be run again safely
  * if an earlier attempt was interrupted.
  */
 export const DEMO_ADDRESS = "Demonstration data (central Johannesburg)";
-const DEMO_NOTE = "Demonstration report for the EvoHacks evaluation; not a real incident.";
-const DEMO_SOURCE = "Demonstration record invented for the EvoHacks evaluation; not a real asset.";
+const DEMO_NOTE = "Demonstration report; not a real incident.";
+const DEMO_SOURCE = "Demonstration record; not a real asset.";
 
 interface DemoReport {
   key: string;
@@ -152,7 +152,7 @@ async function step(name: string, action: () => Promise<void>): Promise<void> {
 export async function loadDemoData(actor: StaffActor | null): Promise<DemoDataResult> {
   const coordinator = requireCoordinator(actor);
   if (!openAccessEnabled()) {
-    throw new AppError("forbidden", "Demonstration data can only be loaded on an open evaluation deployment.");
+    throw new AppError("forbidden", "Demonstration data can only be loaded on a demo site with open access switched on.");
   }
 
   const crews = await ensureCrews(coordinator);

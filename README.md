@@ -8,8 +8,6 @@
 
 Civitas is a geospatial infrastructure incident intelligence platform. Citizens report problems such as burst pipes, potholes and exposed cables; Civitas checks each report for duplicates, scores its priority with an explainable rule engine, screens it against registered critical assets, and recommends a qualified maintenance crew. A municipal coordinator makes every decision, and the citizen can follow progress without creating an account.
 
-Built for **EvoHacks 2** (theme: *Projects for Social Good*).
-
 > Civitas is a decision-support tool. It is **not** an emergency service, it does not dispatch anyone automatically, and it is not deployed with or used by any municipality. Every weight, radius and threshold in it is an initial engineering assumption, not a validated municipal standard.
 
 ## Contents
@@ -31,7 +29,7 @@ Built for **EvoHacks 2** (theme: *Projects for Social Good*).
 15. [Consequence screening](#consequence-screening)
 16. [Assignment algorithm](#assignment-algorithm)
 17. [Demonstration instructions](#demonstration-instructions)
-18. [AI-use disclosure](#ai-use-disclosure)
+18. [AI in the product](#ai-in-the-product)
 19. [Limitations](#limitations)
 20. [Third-party attribution](#third-party-attribution)
 
@@ -149,10 +147,12 @@ Copy `.env.example` to `.env.local` and fill in what you need. Never commit real
 | `DATABASE_URL` | Production | PostgreSQL connection string. On Netlify, `NETLIFY_DATABASE_URL` is used automatically if this is unset. |
 | `GEMINI_API_KEY` | No | Enables AI analysis. Without it reports are classified by rules only and the interface says so. |
 | `GEMINI_MODEL` | No | Model name; defaults to `gemini-2.5-flash`. |
-| `NEXT_PUBLIC_DEPLOYMENT_MODE` | No | Set to `evaluation` to show a banner stating the deployment is not connected to a municipality. |
+| `NEXT_PUBLIC_DEPLOYMENT_MODE` | No | Set to `demo` to show a banner stating the site is a demonstration and is not connected to a municipality. |
+| `CIVITAS_SETUP_CODE` | First run | A code of your choice. Whoever knows it can create the first coordinator account at `/setup`. Only used while no account exists. |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | No | Address for sales enquiries. When set, the site shows "Book a walkthrough" buttons that open an email to it. |
 | `NEXT_PUBLIC_MAP_STYLE_URL`, `NEXT_PUBLIC_MAP_CENTER_LAT`, `NEXT_PUBLIC_MAP_CENTER_LNG`, `NEXT_PUBLIC_MAP_ZOOM` | No | Basemap style and initial view (defaults: OpenFreeMap Positron, Johannesburg). |
 | `CIVITAS_ORGANIZATION_NAME` | No | Name given to the organisation record created on first use. |
-| `CIVITAS_OPEN_ACCESS` | No | Set to `true` to replace password sign-in with name-only sign-in for judges. **Anyone can then open the staff workspaces and read everything submitted, including contact details and photographs.** Never enable it on a deployment holding real reports. |
+| `CIVITAS_OPEN_ACCESS` | No | Set to `true` to replace password sign-in with name-only sign-in for a public demonstration. **Anyone can then open the staff workspaces and read everything submitted, including contact details and photographs.** Never enable it on a deployment holding real reports. |
 | `CIVITAS_ALLOW_EMBEDDED_DB` | No | Only for running `next start` locally without PostgreSQL. Never set on a serverless host. |
 
 Only variables prefixed `NEXT_PUBLIC_` reach the browser; none of them is secret.
@@ -166,14 +166,16 @@ npm run db:migrate     # applies pending migrations to DATABASE_URL, or to the e
 npm run db:generate    # after changing src/lib/db/schema.ts: writes a new migration file
 ```
 
-Create staff accounts (passwords are stored only as bcrypt hashes):
+**First account.** Open `/setup` on the running site, enter the `CIVITAS_SETUP_CODE` you configured, and create the first coordinator. The page closes itself once an account exists. Coordinators then add, deactivate and reset passwords for everyone else on the dashboard's **Team** page.
+
+Accounts can also be created from the command line (passwords are stored only as bcrypt hashes):
 
 ```bash
 npm run users:create -- --email jane@example.org --name "Jane Dlamini" --role coordinator
 npm run users:create -- --email sam@example.org --name "Sam Nkosi" --role crew --crew "Water Team"
 ```
 
-Set `CIVITAS_NEW_USER_PASSWORD` (12+ characters) to choose the password; otherwise a random one is generated and printed once. Add `--evaluation` to label the account as an evaluation account in the interface. A crew must exist (create it on the dashboard's Crews page) before a crew member can be added to it.
+Set `CIVITAS_NEW_USER_PASSWORD` (12+ characters) to choose the password; otherwise a random one is generated and printed once. Add `--demo` to label the account as a demo account in the interface. A crew must exist (create it on the dashboard's Crews page) before a crew member can be added to it.
 
 Retention: `npm run retention:purge -- --days 90` erases reporter contact details for incidents closed or rejected longer ago than the given number of days (`--dry-run` to preview). Coordinators can also erase contact details and delete photographs per incident.
 
@@ -198,16 +200,16 @@ npm run test:integration   # real services against in-memory PostgreSQL
 npm run build && npm run test:e2e   # Playwright against the production build
 ```
 
-Results recorded on 22 November 2026 (Windows 11, Node 24):
+Results recorded on 24 November 2026 (Windows 11, Node 24):
 
 | Check | Result |
 |---|---|
 | Type check | Passed, 0 errors |
 | ESLint | Passed, 0 errors, 0 warnings |
-| Production build | Passed, 25 routes |
+| Production build | Passed |
 | Unit tests | 401 passed (14 files) |
-| Integration tests | 26 passed (2 files) |
-| End-to-end tests | 17 passed (Chromium), plus 1 passed for name-only sign-in (`CIVITAS_E2E_OPEN_ACCESS=1 npx playwright test`) |
+| Integration tests | 32 passed (4 files) |
+| End-to-end tests | 18 passed (Chromium), plus 1 passed for name-only sign-in (`CIVITAS_E2E_OPEN_ACCESS=1 npx playwright test`) |
 | `npm audit` | 4 moderate findings, all in `drizzle-kit` (a development-only migration generator, via an old bundled esbuild). No findings in runtime dependencies. |
 
 What the tests do and do not show:
@@ -223,12 +225,12 @@ The repository is ready for Netlify's built-in Next.js support (no static export
 
 1. **Create the site.** In Netlify choose *Add new site → Import an existing project* and select this repository. `netlify.toml` already sets the build command (`npm run build:netlify`), publish directory and Node version.
 2. **Provision the database.** Add **Netlify DB** to the site (Extensions → Neon / Netlify DB, or `npx netlify db init`). This sets `NETLIFY_DATABASE_URL`, which Civitas uses automatically. Any PostgreSQL works if you set `DATABASE_URL` instead.
-3. **Set environment variables** (Site configuration → Environment variables): `AUTH_SECRET` (required), `GEMINI_API_KEY` (optional), `NEXT_PUBLIC_DEPLOYMENT_MODE=evaluation` (recommended for the hackathon), and `CIVITAS_OPEN_ACCESS=true` only if you want judges to sign in with just a name (see the warning in the environment table). Redeploy after changing variables. Do not put secrets in `netlify.toml`.
+3. **Set environment variables** (Site configuration → Environment variables): `AUTH_SECRET` (required), `GEMINI_API_KEY` (optional), `CIVITAS_SETUP_CODE` (a code of your choice, needed once to create the first account), `NEXT_PUBLIC_CONTACT_EMAIL` (optional), and `NEXT_PUBLIC_DEPLOYMENT_MODE=demo` while the site is a demonstration. Leave `CIVITAS_OPEN_ACCESS` unset unless you deliberately want a no-password public demo (see the warning in the environment table). Redeploy after changing variables. Do not put secrets in `netlify.toml`.
 4. **Deploy.** The build runs `scripts/migrate.ts` first, which applies migrations to the configured database, then builds. If no database URL is present the migration step is skipped with a warning in the build log, and the site will report that the database is unavailable.
 5. **Create staff accounts** from your own machine against the production database:
    ```bash
    DATABASE_URL="<connection string from Netlify>" CIVITAS_NEW_USER_PASSWORD="<choose one>" \
-     npm run users:create -- --email coordinator@example.org --name "Evaluation Coordinator" --role coordinator --evaluation
+     npm run users:create -- --email coordinator@example.org --name "Jane Dlamini" --role coordinator
    ```
    Then sign in, create a crew on the Crews page, and create a crew member with `--role crew --crew "<crew name>"`.
 6. **File storage** needs no setup: photographs go to a Netlify Blobs store named `incident-images`, which exists automatically for deployed sites.
@@ -252,7 +254,7 @@ Deployment has not been performed or tested from this repository yet; see [Limit
 - **Authorisation:** enforced in the service layer for every operation. Crew members can only see and act on their own crew's assignments.
 - **Citizen tracking:** random non-sequential references; access codes stored only as hashes and compared in constant time; unknown reference and wrong code return the same error.
 - **Uploads:** size limit, file-signature check, full re-encode to JPEG (drops EXIF, including GPS), private storage, served only through an authenticated route.
-- **Open evaluation access:** when `CIVITAS_OPEN_ACCESS=true`, sign-in needs only a name and creates a labelled evaluation account. This deliberately removes the protection on staff data for a judging deployment; the site banner, sign-in page and report form say so. It is off by default.
+- **Open demo access:** when `CIVITAS_OPEN_ACCESS=true`, sign-in needs only a name and creates a labelled demo account. This deliberately removes the protection on staff data for a public demonstration; the site banner, sign-in page and report form say so. It is off by default.
 - **Rate limiting:** database-backed fixed windows on report submission, tracking, address suggestions and sign-in; client addresses are hashed before storage.
 - **Cross-origin:** no CORS headers are emitted; state-changing API routes reject mismatched origins; server actions use Next.js's built-in origin check.
 - **Concurrency:** incidents carry a version number and updates are refused if the record changed underneath the user; assignment changes are conditional on the current state; one live assignment per incident is enforced by a partial unique index.
@@ -317,7 +319,7 @@ The Civitas plan is optimal **for this cost model only**. It is not a vehicle-ro
 
 ## Demonstration instructions
 
-A judge can experience the whole workflow on a deployment with one coordinator account and one crew member account.
+The whole workflow can be shown on a deployment with one coordinator account and one crew member account.
 
 **A. Planning comparison (synthetic training scenario, no setup needed)**
 
@@ -339,13 +341,9 @@ The scenario's data is in `src/lib/scenario/training-scenario.ts`. Every record 
 
 To see consequence screening on a live incident, register an asset near the incident on the **Assets** page (with its source) and use **Re-run checks**.
 
-## AI-use disclosure
+## AI in the product
 
-AI was used in two distinct ways.
-
-**In the product.** Google Gemini provides an optional, advisory description of a report's text and photograph. It is called only from the server, its output must pass a strict schema, it is labelled "AI-generated · advisory only" wherever shown, and it has no effect on priority, status or assignment.
-
-**In development.** This codebase was produced with substantial AI assistance (Anthropic's Claude, via Claude Code) working from a detailed product specification written by the developer. See [`docs/AI_ASSISTANCE.md`](docs/AI_ASSISTANCE.md) for an account of what the AI produced and what the developer contributed. Authorship has not been altered: AI-assisted commits carry a `Co-Authored-By` trailer.
+Google Gemini can provide an optional, advisory description of a report's text and photograph. It is called only from the server, its output must pass a strict schema, it is labelled "AI-generated · advisory only" wherever shown, and it has no effect on priority, status or assignment. Civitas works fully without it.
 
 ## Limitations
 
@@ -358,7 +356,7 @@ AI was used in two distinct ways.
 - **Single organisation per deployment.** The schema carries organisation ids, but multi-tenancy is not implemented.
 - **No notifications.** Citizens and crews must open the application to see changes; there is no email or SMS.
 - **Address suggestions depend on a public service** (Photon) with no service guarantee, and cover only what OpenStreetMap contains. The marker position, not the suggested text, is what Civitas stores as the location.
-- **Staff account management is by script**; there is no in-app user administration or password reset.
+- **No self-service password reset.** A coordinator sets a new password for someone from the Team page; there is no "forgot password" email.
 - **One photograph per report**, JPEG/PNG/WebP up to 4 MB after in-browser downscaling.
 - **No accessibility conformance, security certification or legal compliance is claimed.**
 - **Development-only audit findings** in `drizzle-kit` remain (see the test results table).

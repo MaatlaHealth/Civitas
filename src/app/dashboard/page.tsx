@@ -51,7 +51,7 @@ export default async function DashboardOverviewPage() {
         <div className="mb-6 rounded-lg border border-amber-600/40 bg-amber-50 p-4">
           <h2 className="text-base font-semibold">Demonstration data</h2>
           <p className="mt-1 max-w-3xl text-sm">
-            This evaluation site can be filled with invented example reports, crews and assets so there is something to
+            This demo site can be filled with invented example reports, crews and assets so there is something to
             look at. Every demonstration record is labelled as such. Scores, duplicate matches and crew recommendations
             for them are worked out by Civitas in the normal way.
           </p>

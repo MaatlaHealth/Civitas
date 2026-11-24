@@ -85,19 +85,19 @@ export function AnalysisPanel({ detail }: { detail: IncidentDetail }) {
             <>
               <dl className="grid gap-3 text-sm sm:grid-cols-2">
                 <div>
-                  <dt className="text-xs font-semibold tracking-wide text-ink-muted uppercase">Likely category</dt>
+                  <dt className="text-xs font-semibold text-ink-muted">Likely category</dt>
                   <dd>{categoryLabel(result.category)}{result.category !== incident.category ? " (differs from the current category)" : ""}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-semibold tracking-wide text-ink-muted uppercase">Model confidence label</dt>
+                  <dt className="text-xs font-semibold text-ink-muted">Model confidence label</dt>
                   <dd className="capitalize">{result.confidence}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-semibold tracking-wide text-ink-muted uppercase">Consistency</dt>
+                  <dt className="text-xs font-semibold text-ink-muted">Consistency</dt>
                   <dd>{CONSISTENCY_LABELS[result.descriptionConsistency]}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-semibold tracking-wide text-ink-muted uppercase">Image quality</dt>
+                  <dt className="text-xs font-semibold text-ink-muted">Image quality</dt>
                   <dd>{IMAGE_QUALITY_LABELS[result.imageQuality]}</dd>
                 </div>
               </dl>

@@ -154,7 +154,6 @@ export default function HowItWorksPage() {
     <div>
       <header className="border-b border-line bg-white">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-          <p className="text-xs font-semibold tracking-widest text-teal-700 uppercase">Method</p>
           <h1 className="mt-3 text-3xl font-bold sm:text-4xl">How Civitas Works</h1>
           <p className="mt-4 max-w-3xl text-lg leading-relaxed text-ink">
             What each person does, what Civitas calculates automatically, and the exact formulas and default values
@@ -165,7 +164,7 @@ export default function HowItWorksPage() {
 
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-14 lg:py-16">
         <nav aria-label="On this page" className="h-fit rounded-lg border border-line bg-white p-4 lg:sticky lg:top-6">
-          <p className="text-xs font-semibold tracking-wide text-ink-muted uppercase">On this page</p>
+          <p className="text-xs font-semibold text-ink-muted">On this page</p>
           <ul className="mt-3 space-y-1 text-sm">
             {SECTIONS.map((section) => (
               <li key={section.id}>

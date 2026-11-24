@@ -14,7 +14,7 @@ const STATUS_LABEL = { pending: "Awaiting review", confirmed: "Confirmed match",
 function ReportSummary({ label, report }: { label: string; report: DuplicateCandidateView["primary"] }) {
   return (
     <div className="min-w-0 rounded-md border border-line p-3">
-      <p className="text-xs font-semibold tracking-wide text-ink-muted uppercase">{label}</p>
+      <p className="text-xs font-semibold text-ink-muted">{label}</p>
       <Link href={`/dashboard/incidents/${report.id}`} className="font-medium text-navy-900 hover:underline">
         {report.title}
       </Link>

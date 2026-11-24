@@ -5,7 +5,7 @@
  *   npm run users:create -- --email sam@example.org --name "Sam Nkosi" --role crew --crew "Water Team"
  *
  * Options:
- *   --evaluation   label the account as an evaluation account in the interface
+ *   --demo         label the account as a demo account in the interface
  *   --crew <name>  for crew members: the existing crew to join
  *
  * The password is read from the CIVITAS_NEW_USER_PASSWORD environment
@@ -32,7 +32,7 @@ async function main(): Promise<void> {
   const name = argument("name");
   const role = argument("role");
   const crewName = argument("crew");
-  const isEvaluation = process.argv.includes("--evaluation");
+  const isEvaluation = process.argv.includes("--demo");
 
   if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new Error("Provide a valid --email.");
   if (!name) throw new Error("Provide a --name.");
@@ -69,7 +69,7 @@ async function main(): Promise<void> {
     console.log(`Added ${email} to crew "${crewName}".`);
   }
 
-  console.log(`Account ready: ${email} (${role}${isEvaluation ? ", evaluation account" : ""}).`);
+  console.log(`Account ready: ${email} (${role}).`);
   if (supplied === undefined) {
     console.log(`Generated password (shown once, store it securely): ${password}`);
   }

@@ -99,7 +99,6 @@ export default function PrivacyPage() {
     <div>
       <header className="border-b border-line bg-white">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-          <p className="text-xs font-semibold tracking-widest text-teal-700 uppercase">Your information</p>
           <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Privacy</h1>
           <p className="mt-4 max-w-3xl text-lg leading-relaxed text-ink">
             What Civitas collects when you report an infrastructure incident, why it is needed, who can see it and how it
@@ -110,7 +109,7 @@ export default function PrivacyPage() {
 
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-14 lg:py-16">
         <nav aria-label="On this page" className="h-fit rounded-lg border border-line bg-white p-4 lg:sticky lg:top-6">
-          <p className="text-xs font-semibold tracking-wide text-ink-muted uppercase">On this page</p>
+          <p className="text-xs font-semibold text-ink-muted">On this page</p>
           <ul className="mt-3 space-y-1 text-sm">
             {SECTIONS.map((section) => (
               <li key={section.id}>
@@ -126,11 +125,12 @@ export default function PrivacyPage() {
           <div className="flex gap-3 rounded-lg border border-amber-600/40 bg-amber-50 p-5 text-navy-950">
             <AlertTriangle aria-hidden className="mt-0.5 size-5 shrink-0" />
             <div className="min-w-0 text-sm leading-relaxed">
-              <p className="font-semibold">This is an evaluation deployment and this page is not a legal notice.</p>
+              <p className="font-semibold">This is a demonstration site, and this page is not a legal notice.</p>
               <p className="mt-1">
-                Civitas was built for the EvoHacks 2 hackathon and is not operated by any municipality. Data in this
-                deployment may be deleted at any time. The page describes how the software handles information. It does
-                not claim compliance with any law.
+                The site you are using is our public demonstration and is not operated by a municipality. Data entered
+                here may be deleted at any time. This page describes how the software handles information. Each
+                organisation that runs Civitas publishes its own privacy notice, and this page does not claim compliance
+                with any law.
               </p>
             </div>
           </div>
@@ -319,7 +319,7 @@ export default function PrivacyPage() {
                 <strong>Rate-limit counters</strong> are short-lived, and expired counters are deleted.
               </li>
               <li>
-                <strong>This evaluation deployment.</strong> All data may be deleted at any time, without notice.
+                <strong>This demonstration site.</strong> All data may be deleted at any time, without notice.
               </li>
             </ul>
           </section>
@@ -337,7 +337,7 @@ export default function PrivacyPage() {
               your report.
             </p>
             <p>
-              In this evaluation deployment there is no municipal operator. Data here may be deleted at any time.
+              On this demonstration site there is no municipal operator. Data here may be deleted at any time.
             </p>
           </section>
 
